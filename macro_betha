@@ -1,0 +1,52 @@
+function recordMouseClick(event) {
+  macro.push({
+    action: 'click',
+    x: event.clientX,
+    y: event.clientY
+  });
+}
+
+function startRecording() {
+  macro = [];
+  document.addEventListener('click', recordMouseClick);
+  console.log('Gravação iniciada. Clique em elementos na página.');
+}
+
+function stopRecording() {
+  document.removeEventListener('click', recordMouseClick);
+  console.log('Gravação interrompida. Macro gravada:');
+  console.log(macro);
+}
+
+function runMacroRepeatedly(durationInSeconds) {
+  var startTime = Date.now();
+
+function playMacro() {
+  macro.forEach(step => {
+    var element = document.elementFromPoint(step.x, step.y);
+    if (element) {
+      if (step.action === 'click') {
+        element.click();
+      }
+    }
+  });
+}
+
+function loop() {
+    var currentTime = Date.now();
+    var elapsedTime = (currentTime - startTime) / 1000; // convert to seconds
+
+    if (elapsedTime < durationInSeconds) {
+      playMacro();
+      setTimeout(loop, 1000); // Executa a cada segundo
+    } else {
+      console.log('Tempo de execução atingido.');
+    }
+  }
+
+  loop();
+
+}
+
+
+//runMacroRepeatedly(30); Para executar por 30 segundos
